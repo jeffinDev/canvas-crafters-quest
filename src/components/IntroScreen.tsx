@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IntroScene } from "./Scene3D";
+import { Progress } from "@/components/ui/progress";
 
 interface IntroScreenProps {
   onComplete: () => void;
@@ -11,11 +12,11 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setProgress(100), 200);
+    const timer = setTimeout(() => setProgress(100), 300);
     const hideTimer = setTimeout(() => {
       setVisible(false);
-      setTimeout(onComplete, 500);
-    }, 3200);
+      setTimeout(onComplete, 400);
+    }, 3500);
     return () => {
       clearTimeout(timer);
       clearTimeout(hideTimer);
@@ -26,35 +27,54 @@ export function IntroScreen({ onComplete }: IntroScreenProps) {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center gradient-bg"
-          exit={{ opacity: 0, scale: 1.1 }}
-          transition={{ duration: 0.5 }}
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background overflow-hidden"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
         >
+          {/* Subtle gradient background */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,hsl(258_90%_62%/0.12),transparent_70%)]" />
+          
           <IntroScene />
+
           <div className="relative z-10 flex flex-col items-center">
-            <motion.h1
-              className="text-5xl md:text-7xl font-extrabold text-primary-foreground mb-4 animate-float text-center"
-              initial={{ opacity: 0, y: 30 }}
+            <motion.div
+              className="mb-2 text-sm font-medium tracking-[0.3em] uppercase text-muted-foreground"
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              style={{ textShadow: "0 10px 30px rgba(0,0,0,0.3)" }}
+              transition={{ delay: 0.2, duration: 0.6 }}
             >
-              Canveiro Formado
+              Plataforma de Ensino
+            </motion.div>
+            
+            <motion.h1
+              className="text-4xl sm:text-5xl md:text-6xl font-display font-bold text-foreground mb-2 text-center tracking-tight"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.7 }}
+            >
+              Canveiro<span className="gradient-text"> Formado</span>
             </motion.h1>
+
             <motion.p
-              className="text-lg md:text-xl text-primary-foreground/90 mb-10"
+              className="text-muted-foreground text-sm mb-12"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.7 }}
             >
-              Curso Completo de Canva
+              Domine o design gráfico profissional
             </motion.p>
-            <div className="w-64 md:w-80 h-1.5 bg-primary-foreground/20 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary-foreground rounded-full transition-all duration-[3000ms] ease-out"
-                style={{ width: `${progress}%`, boxShadow: "0 0 20px rgba(255,255,255,0.5)" }}
+
+            <motion.div
+              className="w-48"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              <Progress 
+                value={progress} 
+                className="h-1 bg-secondary" 
               />
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       )}
